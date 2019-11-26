@@ -26,6 +26,9 @@ import ProfileComponent from '../components/User/Profile';
 
 import AboutComponent from '../components/About';
 
+import PaymentComponent from '../components/Payment/Payment';
+import PaymentsContainer from '../../containers/PaymentsContainer';
+
 const Index = (
   <Stack hideNavBar>
     <Scene hideNavBar>
@@ -36,6 +39,16 @@ const Index = (
         showLabel={false}
         {...DefaultProps.tabProps}
       >
+
+        <Stack
+          key="payment"
+          title="EINZAHLUNG"
+          icon={() => <Icon name="add-circle" {...DefaultProps.icons} />}
+          {...DefaultProps.navbarProps}
+        >
+          <Scene key="payment" component={PaymentsContainer} Layout={PaymentComponent} />
+        </Stack>
+
         <Stack
           key="home"
           title={AppConfig.appName.toUpperCase()}
@@ -53,6 +66,7 @@ const Index = (
         >
           <Scene key="recipes" component={RecipesContainer} Layout={RecipeListingComponent} />
         </Stack>
+
 
         <Stack
           key="profile"

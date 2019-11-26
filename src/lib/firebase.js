@@ -1,3 +1,4 @@
+/*
 import * as FirebaseModule from 'firebase';
 import firebaseConfig from '../constants/firebase';
 
@@ -17,3 +18,4 @@ if (apiKey && authDomain && databaseURL && storageBucket && messagingSenderId) {
 
 export const FirebaseRef = firebaseInitialized ? FirebaseModule.database().ref() : null;
 export const Firebase = firebaseInitialized ? FirebaseModule : null;
+*/

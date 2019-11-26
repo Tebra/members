@@ -35,8 +35,9 @@
     "@rematch/persist": "^1.1.6",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.3.1",
+    "date-fns": "^2.8.1",
     "expo": "^35.0.0",
-    "firebase": "^5.9.2",
+    "expo-font": "~7.0.0",
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
@@ -53,6 +54,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "babel-jest": "^24.9.0",
     "babel-preset-expo": "^5.1.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
@@ -62,6 +64,6 @@
     "gh-pages": "^2.0.1",
     "jest-expo": "^32.0.0",
     "node-sass": "^4.11.0",
-    "react-scripts": "2.1.8"
+    "react-scripts": "3.2.0"
   }
 }
