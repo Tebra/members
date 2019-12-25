@@ -1,6 +1,21 @@
 import React from 'react';
 import {
-  Container, Header, Item, Input, Icon, Content, Text, Card, CardItem, Button, Body, Right,
+  View,
+  Container,
+  Grid,
+  Col,
+  Row,
+  Header,
+  Item,
+  Input,
+  Icon,
+  Content,
+  Text,
+  Card,
+  CardItem,
+  Button,
+  Body,
+  Right,
 } from 'native-base';
 import {
   FlatList, RefreshControl, TouchableOpacity,
@@ -8,7 +23,6 @@ import {
 import PropTypes from 'prop-types';
 import Loading from '../UI/Loading';
 import Error from '../UI/Error';
-import Spacer from '../UI/Spacer';
 
 const Members = ({
   error, members, loading, reFetch,
@@ -41,32 +55,51 @@ const Members = ({
           data={members}
           renderItem={({ item }) => (
             <Card style={{ paddingHorizontal: 4 }}>
-              <CardItem header>
-                <Text style={{ fontWeight: '600' }}>
-                  {item.lastname}
-                  {' '}
-                  {item.firstname}
-                </Text>
-                <Body />
-                <Right>
-                  <TouchableOpacity onPress={() => console.log('Pressed')} style={{ flex: 1 }}>
-                    <Icon name="arrow-forward" />
-                  </TouchableOpacity>
-                </Right>
-              </CardItem>
 
-              <CardItem>
-                <Text>
-                  {item.lastname}
-                </Text>
-                <Spacer size={5} />
-                <Text>
-                  {item.firstname}
-                </Text>
-              </CardItem>
+              <Grid>
+                <Row>
+                  <CardItem header>
+                    <Text style={{
+                      fontWeight: '600',
+                      fontSize: 16,
+                    }}
+                    >
+                      {item.lastname}
+                      {' '}
+                      {item.firstname}
+                    </Text>
+                    <Body />
+                  </CardItem>
+                </Row>
+                <Row>
 
-              <CardItem footer bordered />
+                  <Col size={8} style={{ backgroundColor: '#635DB7' }}>
+                    <CardItem>
+                      <View style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                      }}
+                      >
+                        <Text>
+                          {item.phone}
+                        </Text>
+                        <Text>
+                          {item.address}
+                        </Text>
+                      </View>
+                    </CardItem>
+                  </Col>
 
+                  <Col size={1}>
+                    <TouchableOpacity onPress={() => console.log('Pressed')} style={{ flex: 1 }}>
+                      <Right>
+                        <Icon name="arrow-forward" />
+                      </Right>
+                    </TouchableOpacity>
+                  </Col>
+
+                </Row>
+              </Grid>
             </Card>
           )}
           keyExtractor={keyExtractor}
