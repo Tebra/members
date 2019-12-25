@@ -27,7 +27,8 @@ import ProfileComponent from '../components/User/Profile';
 import AboutComponent from '../components/About';
 
 import PaymentComponent from '../components/Payment/Payment';
-import PaymentsContainer from '../../containers/PaymentsContainer';
+import MembersComponent from '../components/User/Members';
+import MembersContainer from '../../containers/MembersContainer';
 
 const Index = (
   <Stack hideNavBar>
@@ -46,7 +47,8 @@ const Index = (
           icon={() => <Icon name="add-circle" {...DefaultProps.icons} />}
           {...DefaultProps.navbarProps}
         >
-          <Scene key="payment" component={PaymentsContainer} Layout={PaymentComponent} />
+          <Scene key="members" component={MembersContainer} Layout={MembersComponent} />
+          <Scene back key="payments" component={PaymentComponent} />
         </Stack>
 
         <Stack
@@ -67,14 +69,17 @@ const Index = (
           <Scene key="recipes" component={RecipesContainer} Layout={RecipeListingComponent} />
         </Stack>
 
-
         <Stack
           key="profile"
           title="PROFILE"
           icon={() => <Icon name="contact" {...DefaultProps.icons} />}
           {...DefaultProps.navbarProps}
         >
-          <Scene key="profileHome" component={MemberContainer} Layout={ProfileComponent} />
+          <Scene
+            key="profileHome"
+            component={MemberContainer}
+            Layout={ProfileComponent}
+          />
           <Scene
             back
             key="signUp"

@@ -1,8 +1,11 @@
 import { errorMessages } from '../constants/messages';
+import initState from '../store/members';
 import { Firebase, FirebaseRef } from '../lib/firebase';
 
 export default {
-  state: {}, // initial state
+  state: {
+    members: initState.members,
+  }, // initial state
 
   /**
    * Reducers
@@ -36,6 +39,13 @@ export default {
     resetUser() {
       return {};
     },
+
+    replaceAllMemberData(state, payload) {
+      return {
+        ...state,
+        members: payload,
+      };
+    },
   },
 
   /**
@@ -63,19 +73,25 @@ export default {
         if (password !== password2) return reject({ message: errorMessages.passwordsDontMatch });
 
         // Go to Firebase
-        return Firebase.auth().createUserWithEmailAndPassword(email, password)
+        return Firebase.auth()
+          .createUserWithEmailAndPassword(email, password)
           .then((res) => {
             // Send user details to Firebase database
             if (res && res.user.uid) {
-              FirebaseRef.child(`users/${res.user.uid}`).set({
-                firstName,
-                lastName,
-                signedUp: Firebase.database.ServerValue.TIMESTAMP,
-                lastLoggedIn: Firebase.database.ServerValue.TIMESTAMP,
-              }).then(resolve);
+              FirebaseRef.child(`users/${res.user.uid}`)
+                .set({
+                  firstName,
+                  lastName,
+                  signedUp: Firebase.database.ServerValue.TIMESTAMP,
+                  lastLoggedIn: Firebase.database.ServerValue.TIMESTAMP,
+                })
+                .then(resolve);
             }
-          }).catch(reject);
-      }).catch((err) => { throw err.message; });
+          })
+          .catch(reject);
+      }).catch((err) => {
+        throw err.message;
+      });
     },
 
     /**
@@ -102,7 +118,7 @@ export default {
     },
 
     /**
-     * Get the current Member's Details
+     * Get the current Members's Details
      *
      * @returns {Promise}
      */
@@ -111,14 +127,23 @@ export default {
 
       // Ensure token is up to date
       return new Promise((resolve) => {
-        Firebase.auth().onAuthStateChanged((loggedIn) => {
-          if (loggedIn) {
-            this.listenForMemberProfileUpdates(dispatch);
-            return resolve();
-          }
+        Firebase.auth()
+          .onAuthStateChanged((loggedIn) => {
+            if (loggedIn) {
+              this.listenForMemberProfileUpdates(dispatch);
+              return resolve();
+            }
 
-          return new Promise(() => resolve);
-        });
+            return new Promise(() => resolve);
+          });
+      });
+    },
+
+    getAllMembers() {
+      return new Promise((resolve) => {
+        setTimeout(resolve, 100);
+        // return this.replacePayments(payload);
+        return dispatch.members;
       });
     },
 
@@ -139,8 +164,10 @@ export default {
         }
 
         // Go to Firebase
-        return Firebase.auth().setPersistence(Firebase.auth.Auth.Persistence.LOCAL)
-          .then(() => Firebase.auth().signInWithEmailAndPassword(email, password)
+        return Firebase.auth()
+          .setPersistence(Firebase.auth.Auth.Persistence.LOCAL)
+          .then(() => Firebase.auth()
+            .signInWithEmailAndPassword(email, password)
             .then(async (res) => {
               const userDetails = res && res.user ? res.user : null;
 
@@ -149,13 +176,16 @@ export default {
 
               // Update last logged in data
               if (userDetails.uid) {
-                FirebaseRef.child(`users/${userDetails.uid}`).update({
-                  lastLoggedIn: Firebase.database.ServerValue.TIMESTAMP,
-                });
+                FirebaseRef.child(`users/${userDetails.uid}`)
+                  .update({
+                    lastLoggedIn: Firebase.database.ServerValue.TIMESTAMP,
+                  });
 
                 // Send verification Email when email hasn't been verified
                 if (userDetails.emailVerified === false) {
-                  Firebase.auth().currentUser.sendEmailVerification()
+                  Firebase.auth()
+                    .currentUser
+                    .sendEmailVerification()
                     .catch(() => console.log('Verification email failed to send'));
                 }
 
@@ -164,8 +194,11 @@ export default {
               }
 
               return resolve();
-            }).catch(reject));
-      }).catch((err) => { throw err.message; });
+            })
+            .catch(reject));
+      }).catch((err) => {
+        throw err.message;
+      });
     },
 
     /**
@@ -182,12 +215,16 @@ export default {
         if (!email) return reject({ message: errorMessages.missingEmail });
 
         // Go to Firebase
-        return Firebase.auth().sendPasswordResetEmail(email)
+        return Firebase.auth()
+          .sendPasswordResetEmail(email)
           .then(() => {
             this.resetUser();
             resolve();
-          }).catch(reject);
-      }).catch((err) => { throw err.message; });
+          })
+          .catch(reject);
+      }).catch((err) => {
+        throw err.message;
+      });
     },
 
     /**
@@ -219,21 +256,34 @@ export default {
         }
 
         // Go to Firebase
-        return FirebaseRef.child(`users/${UID}`).update({ firstName, lastName })
+        return FirebaseRef.child(`users/${UID}`)
+          .update({
+            firstName,
+            lastName,
+          })
           .then(async () => {
             // Update Email address
             if (changeEmail) {
-              await Firebase.auth().currentUser.updateEmail(email).catch(reject);
+              await Firebase.auth()
+                .currentUser
+                .updateEmail(email)
+                .catch(reject);
             }
 
             // Change the Password
             if (changePassword) {
-              await Firebase.auth().currentUser.updatePassword(password).catch(reject);
+              await Firebase.auth()
+                .currentUser
+                .updatePassword(password)
+                .catch(reject);
             }
 
             return resolve();
-          }).catch(reject);
-      }).catch((err) => { throw err.message; });
+          })
+          .catch(reject);
+      }).catch((err) => {
+        throw err.message;
+      });
     },
 
     /**
@@ -242,11 +292,15 @@ export default {
      * @returns {Promise}
      */
     logout() {
-      return new Promise((resolve, reject) => Firebase.auth().signOut()
+      return new Promise((resolve, reject) => Firebase.auth()
+        .signOut()
         .then(() => {
           this.resetUser();
           resolve();
-        }).catch(reject)).catch((err) => { throw err.message; });
+        })
+        .catch(reject)).catch((err) => {
+        throw err.message;
+      });
     },
 
   }),

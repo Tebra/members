@@ -11,9 +11,9 @@ export const errorMessages = {
   // Firebase Related
   invalidFirebase: 'Firebase is not connected correctly',
 
-  // Member
+  // Members
   memberNotAuthd: 'You need to be logged in, to update your profile',
-  memberExists: 'Member already exists',
+  memberExists: 'Members already exists',
   missingFirstName: 'First name is missing',
   missingLastName: 'Last name is missing',
   missingEmail: 'Email is missing',

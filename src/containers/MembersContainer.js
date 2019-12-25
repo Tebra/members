@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-class PaymentContainer extends Component {
+class MembersContainer extends Component {
   static propTypes = {
     Layout: PropTypes.func.isRequired,
-    payments: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-    fetchPayments: PropTypes.func.isRequired,
+    members: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+    fetchMembers: PropTypes.func.isRequired,
   }
 
   state = {
@@ -17,10 +17,10 @@ class PaymentContainer extends Component {
   componentDidMount = () => this.fetchData();
 
   fetchData = (data) => {
-    const { fetchPayments } = this.props;
+    const { fetchMembers } = this.props;
     this.setState({ loading: true });
 
-    return fetchPayments(data)
+    return fetchMembers(data)
       .then(() => this.setState({
         loading: false,
         error: null,
@@ -32,14 +32,14 @@ class PaymentContainer extends Component {
   }
 
   render = () => {
-    const { Layout, payments } = this.props;
+    const { Layout, members } = this.props;
     const { loading, error } = this.state;
 
     return (
       <Layout
         error={error}
         loading={loading}
-        payments={payments}
+        members={members}
         reFetch={() => this.fetchData()}
       />
     );
@@ -47,11 +47,11 @@ class PaymentContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  payments: state.payments.payments || [],
+  members: state.member.members || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchPayments: dispatch.payments.getDummyPayments,
+  fetchMembers: dispatch.member.getAllMembers,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PaymentContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MembersContainer);

@@ -1,21 +1,22 @@
 import React from 'react';
-import { Actions } from 'react-native-router-flux';
 import {
-  Container, Icon, Content, Text, Card, CardItem, Body, Right,
+  Container, Header, Item, Input, Icon, Content, Text, Card, CardItem, Button, Body, Right,
 } from 'native-base';
 import {
   FlatList, RefreshControl, TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { format, parseISO } from 'date-fns';
 import Loading from '../UI/Loading';
 import Error from '../UI/Error';
+import Spacer from '../UI/Spacer';
 
-const Payment = ({
-  error, payments, loading, reFetch,
+const Members = ({
+  error, members, loading, reFetch,
 }) => {
   // Loading
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   // Error
   if (error) return <Error content={error} />;
@@ -24,18 +25,31 @@ const Payment = ({
 
   return (
     <Container>
+      <Header searchBar rounded>
+        <Item>
+          <Icon name="ios-search" />
+          <Input placeholder="Mitglied suchen.." />
+          <Icon name="ios-people" />
+        </Item>
+        <Button transparent>
+          <Text>Search</Text>
+        </Button>
+      </Header>
+
       <Content padder>
         <FlatList
-          data={payments}
+          data={members}
           renderItem={({ item }) => (
             <Card style={{ paddingHorizontal: 4 }}>
               <CardItem header>
                 <Text style={{ fontWeight: '600' }}>
-                  {item.title}
+                  {item.lastname}
+                  {' '}
+                  {item.firstname}
                 </Text>
                 <Body />
                 <Right>
-                  <TouchableOpacity onPress={() => Actions.payments()} style={{ flex: 1 }}>
+                  <TouchableOpacity onPress={() => console.log('Pressed')} style={{ flex: 1 }}>
                     <Icon name="arrow-forward" />
                   </TouchableOpacity>
                 </Right>
@@ -43,22 +57,15 @@ const Payment = ({
 
               <CardItem>
                 <Text>
-                  {item.payedBy}
+                  {item.lastname}
                 </Text>
+                <Spacer size={5} />
                 <Text>
-                  {item.comment}
+                  {item.firstname}
                 </Text>
               </CardItem>
 
-              <CardItem footer bordered>
-                <Text>
-                  {format(parseISO(item.dateFrom), 'dd.MM.yyyy')}
-                </Text>
-                <Text> - </Text>
-                <Text>
-                  {format(parseISO(item.dateTo), 'dd.MM.yyyy')}
-                </Text>
-              </CardItem>
+              <CardItem footer bordered />
 
             </Card>
           )}
@@ -75,15 +82,15 @@ const Payment = ({
   );
 };
 
-Payment.propTypes = {
+Members.propTypes = {
   error: PropTypes.string,
-  payments: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  members: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   loading: PropTypes.bool.isRequired,
   reFetch: PropTypes.func.isRequired,
 };
 
-Payment.defaultProps = {
+Members.defaultProps = {
   error: null,
 };
 
-export default Payment;
+export default Members;
